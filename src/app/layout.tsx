@@ -15,8 +15,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://undb.anotado.app.br/"),
   title: "Torre de Comando - AM Consultorias",
   description: "Painel SaaS de Inteligência Operacional e Mitigação de Riscos na Economia do Cuidado. Gestão avançada para ILPIs, creches e CAPS.",
+  openGraph: {
+    title: "Torre de Comando - AM Consultorias",
+    description: "Painel SaaS de Inteligência Operacional e Mitigação de Riscos na Economia do Cuidado. Gestão avançada para ILPIs, creches e CAPS.",
+    url: "https://undb.anotado.app.br",
+    siteName: "AM Consultorias",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Torre de Comando - AM Consultorias",
+    description: "Painel SaaS de Inteligência Operacional e Mitigação de Riscos na Economia do Cuidado. Gestão avançada para ILPIs, creches e CAPS.",
+  },
 };
 
 export const viewport = {

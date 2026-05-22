@@ -117,7 +117,7 @@ npx tsc --noEmit
 
 ## 👨‍🏫 Equipe de Desenvolvimento
 *   **Parceiro de Negócio (Consultoria de Campo):** Adriano (AM Consultorias)
-*   **Acadêmicos de Engenharia de Software:** Grupo de Alunos — UNDB
+*   **Acadêmicos de Engenharia de Software (UNDB):** Victor Eduard Rodrigues Cabra, José Dominick de Sá Pereira, Taino Samuel Lima Ribeiro, João Marcelo Santana Praseres, Gabriel Ordonez dos, Landiel durans Costa da Silva, Luiz Gabriel Mendes Ferreira, Renan Silva Pires
 *   **Cadeira Acadêmica:** Banco de Dados (Orientador: Prof. Felipe)
 
 ---

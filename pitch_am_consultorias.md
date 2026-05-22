@@ -204,7 +204,7 @@ graph LR
   * Dados não estruturados (áudios, conversas de corredor) $\rightarrow$ Estruturação relacional rígida.
   * A disciplina de Banco de Dados deixou de ser apenas sobre comandos SQL e chaves estrangeiras.
   * Tornou-se uma ferramenta de **arquitetura de impacto social**, blindando as instituições que cuidam das pessoas mais vulneráveis da nossa sociedade.
-* **Integrantes do Grupo:** [Nomes dos Integrantes]
+* **Integrantes do Grupo:** Victor Eduard Rodrigues Cabra, José Dominick de Sá Pereira, Taino Samuel Lima Ribeiro, João Marcelo Santana Praseres, Gabriel Ordonez dos, Landiel durans Costa da Silva, Luiz Gabriel Mendes Ferreira e Renan Silva Pires.
 
 #### 🎙️ Roteiro do Apresentador
 > *"Para concluir, a nossa maior reflexão acadêmica neste projeto foi compreender como traduzir dados altamente não estruturados (como desabafos de coordenadoras de asilos por áudio) para a rigidez de um banco de dados relacional.*

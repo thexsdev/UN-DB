@@ -812,6 +812,42 @@ export default function SlidesPage() {
                     <h4 className={`font-extrabold text-slate-800 mt-0.5 sm:mt-1 ${
                       isFullscreen ? 'text-sm' : 'text-[10px] sm:text-xs'
                     }`}>Acadêmicos de Engenharia de Software — UNDB</h4>
+                    <div className={`grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1 mt-2 text-left text-slate-500 font-semibold tracking-tight transition-all duration-300 ${
+                      isFullscreen ? 'text-[11px] md:text-[12px]' : 'text-[7.5px] sm:text-[9px]'
+                    }`}>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500 shrink-0" />
+                        <span>Victor Eduard R. Cabra</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-indigo-500 shrink-0" />
+                        <span>José Dominick S. Pereira</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500 shrink-0" />
+                        <span>Taino Samuel L. Ribeiro</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-indigo-500 shrink-0" />
+                        <span>João Marcelo S. Praseres</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500 shrink-0" />
+                        <span>Gabriel Ordonez dos</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-indigo-500 shrink-0" />
+                        <span>Landiel durans C. da Silva</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500 shrink-0" />
+                        <span>Luiz Gabriel M. Ferreira</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="h-1 w-1 rounded-full bg-indigo-500 shrink-0" />
+                        <span>Renan Silva Pires</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`font-bold text-slate-500 ${isFullscreen ? 'text-sm' : 'text-xs'}`}>Muito obrigado pela atenção!</span>

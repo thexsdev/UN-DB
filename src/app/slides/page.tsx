@@ -148,12 +148,12 @@ export default function SlidesPage() {
         
         {/* VIEWPORT DO SLIDE (ESTRUTURA 16:9 PROPORCIONAL E ALINHADA) */}
         <div className={`flex-1 flex items-center justify-center relative overflow-hidden transition-all duration-500 ${
-          isFullscreen ? 'p-0 bg-slate-50' : 'p-6'
+          isFullscreen ? 'p-0 bg-slate-50' : 'p-4 sm:p-6'
         }`}>
-          <div className={`w-full relative overflow-hidden flex flex-col justify-between backdrop-blur-xl transition-all duration-500 ${
+          <div className={`w-full relative flex flex-col justify-between backdrop-blur-xl transition-all duration-500 ${
             isFullscreen 
-              ? 'w-full h-full rounded-none border-none p-10 md:p-16 lg:p-20 bg-slate-50' 
-              : 'max-w-6xl aspect-[16/9] rounded-3xl bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 p-10 md:p-14'
+              ? 'w-full h-full rounded-none border-none p-6 sm:p-10 md:p-16 lg:p-20 bg-slate-50 overflow-y-auto' 
+              : 'max-w-6xl w-full aspect-auto md:aspect-[16/9] rounded-3xl bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 p-5 pb-24 md:p-14 overflow-y-auto md:overflow-hidden'
           }`}>
             
             {/* Background Grid no Slide */}
@@ -162,82 +162,82 @@ export default function SlidesPage() {
             {/* SLIDE 1: CAPA */}
             {currentSlide === 0 && (
               <div className="flex-1 flex flex-col justify-between relative z-10 animate-fade-in">
-                <div className={`${isFullscreen ? 'space-y-8 my-auto' : 'space-y-4'}`}>
-                  <div className="flex items-center gap-2">
+                <div className={`${isFullscreen ? 'space-y-6 md:space-y-8 my-auto' : 'space-y-3 sm:space-y-4'}`}>
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={`font-extrabold tracking-widest text-emerald-700 uppercase bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full shadow-sm ${
-                      isFullscreen ? 'text-xs px-4 py-1.5' : 'text-[10px]'
+                      isFullscreen ? 'text-[10px] md:text-xs px-3 md:px-4 py-1 md:py-1.5' : 'text-[9px] sm:text-[10px]'
                     }`}>
                       PjBL ACADÊMICO E COMERCIAL
                     </span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300 hidden sm:inline" />
                     <span className={`font-bold text-slate-500 uppercase tracking-wider ${
-                      isFullscreen ? 'text-xs' : 'text-[10px]'
+                      isFullscreen ? 'text-[10px] md:text-xs' : 'text-[9px] sm:text-[10px]'
                     }`}>
                       Cadeira de Banco de Dados
                     </span>
                   </div>
                   <h2 className={`font-extrabold tracking-tight text-slate-900 leading-tight ${
-                    isFullscreen ? 'text-6xl md:text-8xl' : 'text-4xl md:text-6xl'
+                    isFullscreen ? 'text-4xl md:text-6xl' : 'text-2xl sm:text-4xl md:text-6xl'
                   }`}>
                     AM Consultorias: <br />
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-red-500 to-red-600">
                       Economia do Cuidado
                     </span>
                   </h2>
                   <p className={`text-slate-600 max-w-4xl font-medium leading-relaxed ${
-                    isFullscreen ? 'text-lg md:text-2xl' : 'text-sm md:text-lg'
+                    isFullscreen ? 'text-base md:text-xl lg:text-2xl' : 'text-xs sm:text-sm md:text-lg'
                   }`}>
                     Como a modelagem relacional de banco de dados e a Inteligência Artificial automatizada mitigam riscos de integridade e protegem vidas humanas vulneráveis.
                   </p>
                 </div>
 
-                <div className={`grid gap-6 sm:grid-cols-3 border-t border-slate-100 pt-8 ${
-                  isFullscreen ? 'mt-12 pb-12 gap-10' : 'mt-4'
+                <div className={`grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3 border-t border-slate-100 pt-4 sm:pt-8 ${
+                  isFullscreen ? 'mt-8 md:mt-12 pb-6 md:pb-12 gap-8 md:gap-10' : 'mt-3 sm:mt-4'
                 }`}>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <div className={`flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-indigo-600 shadow-sm hover:shadow-md transition-all ${
-                      isFullscreen ? 'h-16 w-16' : 'h-10 w-10'
+                      isFullscreen ? 'h-12 w-12 md:h-16 md:w-16' : 'h-9 w-9 sm:h-10 sm:w-10'
                     }`}>
-                      <Users className={`${isFullscreen ? 'h-8 w-8' : 'h-5 w-5'}`} />
+                      <Users className={`${isFullscreen ? 'h-6 w-6 md:h-8 md:w-8' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
                     </div>
                     <div>
                       <p className={`font-bold text-slate-500 uppercase tracking-widest ${
-                        isFullscreen ? 'text-xs' : 'text-[9px]'
+                        isFullscreen ? 'text-[9px] md:text-xs' : 'text-[8px] sm:text-[9px]'
                       }`}>Apoio de Negócio</p>
                       <h4 className={`font-extrabold text-slate-800 mt-0.5 ${
-                        isFullscreen ? 'text-base' : 'text-xs'
+                        isFullscreen ? 'text-sm md:text-base' : 'text-[11px] sm:text-xs'
                       }`}>Adriano (AM Consultorias)</h4>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <div className={`flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-emerald-600 shadow-sm hover:shadow-md transition-all ${
-                      isFullscreen ? 'h-16 w-16 animate-pulse' : 'h-10 w-10'
+                      isFullscreen ? 'h-12 w-12 md:h-16 md:w-16 animate-pulse' : 'h-9 w-9 sm:h-10 sm:w-10'
                     }`}>
-                      <Database className={`${isFullscreen ? 'h-8 w-8 animate-pulse' : 'h-5 w-5'}`} />
+                      <Database className={`${isFullscreen ? 'h-6 w-6 md:h-8 md:w-8 animate-pulse' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
                     </div>
                     <div>
                       <p className={`font-bold text-slate-500 uppercase tracking-widest ${
-                        isFullscreen ? 'text-xs' : 'text-[9px]'
+                        isFullscreen ? 'text-[9px] md:text-xs' : 'text-[8px] sm:text-[9px]'
                       }`}>Orientação Acadêmica</p>
                       <h4 className={`font-extrabold text-slate-800 mt-0.5 ${
-                        isFullscreen ? 'text-base' : 'text-xs'
+                        isFullscreen ? 'text-sm md:text-base' : 'text-[11px] sm:text-xs'
                       }`}>Prof. Felipe Gomes Barbosa</h4>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <div className={`flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-sky-600 shadow-sm hover:shadow-md transition-all ${
-                      isFullscreen ? 'h-16 w-16' : 'h-10 w-10'
+                      isFullscreen ? 'h-12 w-12 md:h-16 md:w-16' : 'h-9 w-9 sm:h-10 sm:w-10'
                     }`}>
-                      <Network className={`${isFullscreen ? 'h-8 w-8' : 'h-5 w-5'}`} />
+                      <Network className={`${isFullscreen ? 'h-6 w-6 md:h-8 md:w-8' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
                     </div>
                     <div>
                       <p className={`font-bold text-slate-500 uppercase tracking-widest ${
-                        isFullscreen ? 'text-xs' : 'text-[9px]'
+                        isFullscreen ? 'text-[9px] md:text-xs' : 'text-[8px] sm:text-[9px]'
                       }`}>Instituição de Ensino</p>
                       <h4 className={`font-extrabold text-slate-800 mt-0.5 ${
-                        isFullscreen ? 'text-base' : 'text-xs'
+                        isFullscreen ? 'text-sm md:text-base' : 'text-[11px] sm:text-xs'
                       }`}>UNDB - ES03BN (2026.1)</h4>
                     </div>
                   </div>
@@ -248,52 +248,52 @@ export default function SlidesPage() {
             {/* SLIDE 2: DADO SOCIAL & RISCO */}
             {currentSlide === 1 && (
               <div className="flex-1 flex flex-col justify-between relative z-10 animate-fade-in">
-                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-2'}`}>
+                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-1.5 sm:space-y-2'}`}>
                   <div className="flex items-center gap-2">
                     <span className={`font-extrabold tracking-widest text-indigo-700 uppercase bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full ${
-                      isFullscreen ? 'text-xs' : 'text-[10px]'
+                      isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'
                     }`}>
                       CONTEXTO E DOR SOCIAL
                     </span>
                   </div>
                   <h2 className={`font-extrabold tracking-tight text-slate-900 ${
-                    isFullscreen ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
+                    isFullscreen ? 'text-3xl md:text-5xl lg:text-6xl' : 'text-lg sm:text-3xl md:text-4xl'
                   }`}>
                     O Envelhecimento Populacional e a Pressão Gerencial
                   </h2>
                 </div>
 
-                <div className={`grid gap-6 md:grid-cols-2 my-auto ${
-                  isFullscreen ? 'py-10 gap-10' : 'py-2'
+                <div className={`grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 my-auto ${
+                  isFullscreen ? 'py-6 md:py-10 gap-8 md:gap-10' : 'py-2'
                 }`}>
                   {/* Bloco Estatístico IBGE */}
                   <div className={`bg-slate-50 border border-slate-100 rounded-2xl flex flex-col justify-center relative overflow-hidden group hover:border-slate-200 hover:shadow-md transition-all duration-300 ${
-                    isFullscreen ? 'p-10' : 'p-6'
+                    isFullscreen ? 'p-6 md:p-10' : 'p-4 sm:p-6'
                   }`}>
                     <div className="absolute top-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400 w-full" />
                     <div className="flex items-baseline gap-2">
                       <span className={`font-black text-emerald-600 tracking-tighter animate-pulse ${
-                        isFullscreen ? 'text-7xl md:text-8xl' : 'text-5xl md:text-6xl'
+                        isFullscreen ? 'text-5xl md:text-7xl lg:text-8xl' : 'text-3xl sm:text-5xl md:text-6xl'
                       }`}>+57,4%</span>
-                      <TrendingUp className={`text-emerald-600 ${isFullscreen ? 'h-8 w-8' : 'h-6 w-6'}`} />
+                      <TrendingUp className={`text-emerald-600 ${isFullscreen ? 'h-6 w-6 md:h-8 md:w-8' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
                     </div>
-                    <h4 className={`font-bold text-slate-800 ${isFullscreen ? 'text-lg mt-5' : 'text-sm mt-3'}`}>Crescimento de Idosos 65+ anos</h4>
-                    <p className={`text-slate-600 leading-relaxed ${isFullscreen ? 'text-sm md:text-base mt-2' : 'text-[11px] mt-1'}`}>
+                    <h4 className={`font-bold text-slate-800 ${isFullscreen ? 'text-base md:text-lg mt-3 md:mt-5' : 'text-xs sm:text-sm mt-2 sm:mt-3'}`}>Crescimento de Idosos 65+ anos</h4>
+                    <p className={`text-slate-600 leading-relaxed ${isFullscreen ? 'text-xs md:text-sm lg:text-base mt-1.5 md:mt-2' : 'text-[10px] sm:text-[11px] mt-1'}`}>
                       Segundo o Censo IBGE 2022, o número de idosos atingiu 22,1 milhões no Brasil. Essa explosão populacional gera uma demanda gigantesca por lares de idosos (ILPIs).
                     </p>
                   </div>
 
                   {/* Bloco de Risco de Vida */}
                   <div className={`bg-slate-50 border border-slate-100 rounded-2xl flex flex-col justify-center relative overflow-hidden group hover:border-slate-200 hover:shadow-md transition-all duration-300 ${
-                    isFullscreen ? 'p-10' : 'p-6'
+                    isFullscreen ? 'p-6 md:p-10' : 'p-4 sm:p-6'
                   }`}>
                     <div className="absolute top-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-amber-500 w-full" />
-                    <div className="flex items-center gap-3 text-rose-600">
-                      <AlertTriangle className={`${isFullscreen ? 'h-12 w-12' : 'h-8 w-8'} animate-bounce`} />
-                      <span className={`font-extrabold uppercase tracking-wider ${isFullscreen ? 'text-xl' : 'text-lg'}`}>Alto Risco Operacional</span>
+                    <div className="flex items-center gap-2 sm:gap-3 text-rose-600">
+                      <AlertTriangle className={`${isFullscreen ? 'h-8 w-8 md:h-12 md:w-12' : 'h-5 w-5 sm:h-8 sm:w-8'} animate-bounce`} />
+                      <span className={`font-extrabold uppercase tracking-wider ${isFullscreen ? 'text-base md:text-xl' : 'text-sm sm:text-lg'}`}>Alto Risco Operacional</span>
                     </div>
-                    <h4 className={`font-bold text-slate-800 ${isFullscreen ? 'text-lg mt-5' : 'text-sm mt-3'}`}>Onde um erro de dados custa vidas</h4>
-                    <p className={`text-slate-600 leading-relaxed ${isFullscreen ? 'text-sm md:text-base mt-2' : 'text-[11px] mt-1'}`}>
+                    <h4 className={`font-bold text-slate-800 ${isFullscreen ? 'text-base md:text-lg mt-3 md:mt-5' : 'text-xs sm:text-sm mt-2 sm:mt-3'}`}>Onde um erro de dados custa vidas</h4>
+                    <p className={`text-slate-600 leading-relaxed ${isFullscreen ? 'text-xs md:text-sm lg:text-base mt-1.5 md:mt-2' : 'text-[10px] sm:text-[11px] mt-1'}`}>
                       Diferente de e-commerces, falhas de dados na Economia do Cuidado não geram só prejuízo financeiro. Esquecer um prazo ou uma inspeção significa colocar a integridade física de idosos e crianças em risco.
                     </p>
                   </div>
@@ -310,27 +310,27 @@ export default function SlidesPage() {
             {/* SLIDE 3: MODELAGEM DE DADOS (DER INTERATIVO) */}
             {currentSlide === 2 && (
               <div className="flex-1 flex flex-col justify-between relative z-10 animate-fade-in">
-                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-2'}`}>
+                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-1.5 sm:space-y-2'}`}>
                   <div className="flex items-center gap-2">
                     <span className={`font-extrabold tracking-widest text-emerald-700 uppercase bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full ${
-                      isFullscreen ? 'text-xs' : 'text-[10px]'
+                      isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'
                     }`}>
                       ESTRUTURAÇÃO DO BANCO (POSTGRESQL)
                     </span>
                   </div>
-                  <h2 className={`font-extrabold tracking-tight text-slate-900 flex items-center gap-3 ${
-                    isFullscreen ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
+                  <h2 className={`font-extrabold tracking-tight text-slate-900 flex flex-wrap items-center gap-2 sm:gap-3 ${
+                    isFullscreen ? 'text-3xl md:text-5xl lg:text-6xl' : 'text-lg sm:text-3xl md:text-4xl'
                   }`}>
                     O Modelo Relacional de Dados
-                    <span className={`text-slate-500 font-semibold tracking-normal normal-case ${isFullscreen ? 'text-sm' : 'text-xs'}`}>
-                      (Passe o mouse ou clique nas tabelas)
+                    <span className={`text-slate-500 font-semibold tracking-normal normal-case ${isFullscreen ? 'text-xs' : 'text-[10px] sm:text-xs'}`}>
+                      (Passe o mouse ou toque nas tabelas)
                     </span>
                   </h2>
                 </div>
 
                 {/* VISUALIZADOR DER INTERATIVO */}
-                <div className={`grid grid-cols-5 my-auto relative ${
-                  isFullscreen ? 'gap-6 py-8' : 'gap-3 py-2'
+                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 my-auto relative gap-4 ${
+                  isFullscreen ? 'gap-6 py-4 md:py-8' : 'py-3'
                 }`}>
                   {/* Clientes */}
                   <div 
@@ -346,10 +346,10 @@ export default function SlidesPage() {
                     }`}
                   >
                     <div className={`flex items-center justify-between border-b border-slate-100 ${isFullscreen ? 'pb-3 mb-3' : 'pb-1.5 mb-1.5'}`}>
-                      <span className={`font-extrabold text-emerald-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-[10px]'}`}>clientes</span>
+                      <span className={`font-extrabold text-emerald-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-xs sm:text-[10px]'}`}>clientes</span>
                       <Database className={`${isFullscreen ? 'h-4 w-4 text-emerald-500/80' : 'h-3 w-3 text-slate-500'}`} />
                     </div>
-                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-[8px] space-y-1'}`}>
+                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-xs sm:text-[8px] space-y-1.5 sm:space-y-1'}`}>
                       <div className="text-slate-700 font-bold"><span className="text-yellow-600">id</span> uuid PK</div>
                       <div className="text-slate-500"><span className="font-semibold text-slate-700">nome</span> varchar</div>
                       <div className="text-slate-500"><span className="font-semibold text-slate-700">tipo_instituicao</span></div>
@@ -373,10 +373,10 @@ export default function SlidesPage() {
                     }`}
                   >
                     <div className={`flex items-center justify-between border-b border-slate-100 ${isFullscreen ? 'pb-3 mb-3' : 'pb-1.5 mb-1.5'}`}>
-                      <span className={`font-extrabold text-indigo-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-[10px]'}`}>contratos</span>
+                      <span className={`font-extrabold text-indigo-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-xs sm:text-[10px]'}`}>contratos</span>
                       <Database className={`${isFullscreen ? 'h-4 w-4 text-indigo-400/80' : 'h-3 w-3 text-slate-500'}`} />
                     </div>
-                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-[8px] space-y-1'}`}>
+                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-xs sm:text-[8px] space-y-1.5 sm:space-y-1'}`}>
                       <div className="text-slate-700 font-bold"><span className="text-yellow-600">id</span> uuid PK</div>
                       <div className="text-indigo-600 font-semibold"><span className="text-indigo-500">cliente_id</span> uuid FK</div>
                       <div className="text-slate-500"><span className="font-semibold text-slate-700">tipo_cobranca</span></div>
@@ -400,10 +400,10 @@ export default function SlidesPage() {
                     }`}
                   >
                     <div className={`flex items-center justify-between border-b border-slate-100 ${isFullscreen ? 'pb-3 mb-3' : 'pb-1.5 mb-1.5'}`}>
-                      <span className={`font-extrabold text-sky-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-[10px]'}`}>visitas</span>
+                      <span className={`font-extrabold text-sky-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-xs sm:text-[10px]'}`}>visitas</span>
                       <Database className={`${isFullscreen ? 'h-4 w-4 text-sky-400/80' : 'h-3 w-3 text-slate-500'}`} />
                     </div>
-                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-[8px] space-y-1'}`}>
+                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-xs sm:text-[8px] space-y-1.5 sm:space-y-1'}`}>
                       <div className="text-slate-700 font-bold"><span className="text-yellow-600">id</span> uuid PK</div>
                       <div className="text-sky-600 font-semibold"><span className="text-sky-500">cliente_id</span> uuid FK</div>
                       <div className="text-slate-500"><span className="font-semibold text-slate-700">data_visita</span> timestamp</div>
@@ -426,10 +426,10 @@ export default function SlidesPage() {
                     }`}
                   >
                     <div className={`flex items-center justify-between border-b border-slate-100 ${isFullscreen ? 'pb-3 mb-3' : 'pb-1.5 mb-1.5'}`}>
-                      <span className={`font-extrabold text-amber-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-[10px]'}`}>tarefas_entregas</span>
+                      <span className={`font-extrabold text-amber-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-xs sm:text-[10px]'}`}>tarefas_entregas</span>
                       <Database className={`${isFullscreen ? 'h-4 w-4 text-amber-400/80' : 'h-3 w-3 text-slate-500'}`} />
                     </div>
-                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-[8px] space-y-1'}`}>
+                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-xs sm:text-[8px] space-y-1.5 sm:space-y-1'}`}>
                       <div className="text-slate-700 font-bold"><span className="text-yellow-600">id</span> uuid PK</div>
                       <div className="text-emerald-600 font-semibold"><span className="text-emerald-500">cliente_id</span> uuid FK</div>
                       <div className="text-sky-600 font-semibold"><span className="text-sky-500">visita_id</span> uuid FK</div>
@@ -453,10 +453,10 @@ export default function SlidesPage() {
                     }`}
                   >
                     <div className={`flex items-center justify-between border-b border-slate-100 ${isFullscreen ? 'pb-3 mb-3' : 'pb-1.5 mb-1.5'}`}>
-                      <span className={`font-extrabold text-purple-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-[10px]'}`}>log_interacoes</span>
+                      <span className={`font-extrabold text-purple-600 uppercase tracking-wider ${isFullscreen ? 'text-xs md:text-sm lg:text-base font-black' : 'text-xs sm:text-[10px]'}`}>log_interacoes</span>
                       <Database className={`${isFullscreen ? 'h-4 w-4 text-purple-400/80' : 'h-3 w-3 text-slate-500'}`} />
                     </div>
-                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-[8px] space-y-1'}`}>
+                    <div className={`space-y-1.5 font-mono ${isFullscreen ? 'text-xs lg:text-[13px] xl:text-[14px] space-y-2.5' : 'text-xs sm:text-[8px] space-y-1.5 sm:space-y-1'}`}>
                       <div className="text-slate-700 font-bold"><span className="text-yellow-600">id</span> uuid PK</div>
                       <div className="text-purple-600 font-semibold"><span className="text-purple-500">cliente_id</span> uuid FK</div>
                       <div className="text-slate-500"><span className="font-semibold text-slate-700">remetente</span> varchar</div>
@@ -486,27 +486,27 @@ export default function SlidesPage() {
             {/* SLIDE 4: ARQUITETURA TECNOLÓGICA */}
             {currentSlide === 3 && (
               <div className="flex-1 flex flex-col justify-between relative z-10 animate-fade-in">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className={`${isFullscreen ? 'space-y-4' : 'space-y-2'}`}>
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                  <div className={`${isFullscreen ? 'space-y-4' : 'space-y-1.5 sm:space-y-2'}`}>
                     <div className="flex items-center gap-2">
                       <span className={`font-extrabold tracking-widest text-indigo-700 uppercase bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full ${
-                        isFullscreen ? 'text-xs' : 'text-[10px]'
+                        isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'
                       }`}>
                         ENGENHARIA E AUTOMACÃO
                       </span>
                     </div>
                     <h2 className={`font-extrabold tracking-tight text-slate-900 ${
-                      isFullscreen ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
+                      isFullscreen ? 'text-3xl md:text-5xl lg:text-6xl' : 'text-lg sm:text-3xl md:text-4xl'
                     }`}>
                       A Engrenagem do "Estagiário de Bolso"
                     </h2>
                   </div>
 
                   {/* TABS INTERATIVAS */}
-                  <div className="flex flex-wrap items-center gap-2 bg-slate-100/80 border border-slate-200/50 px-2 py-1.5 rounded-xl self-start">
+                  <div className="flex flex-wrap items-center gap-1.5 bg-slate-100/80 border border-slate-200/50 px-2 py-1.5 rounded-xl self-start">
                     <button 
                       onClick={() => setActiveArchitectureTab('conceptual')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 ${
                         activeArchitectureTab === 'conceptual'
                           ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/80 shadow-sm'
                           : 'text-slate-500 hover:text-slate-800'
@@ -516,7 +516,7 @@ export default function SlidesPage() {
                     </button>
                     <button 
                       onClick={() => setActiveArchitectureTab('full')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 ${
                         activeArchitectureTab === 'full'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-sm'
                           : 'text-slate-500 hover:text-slate-800'
@@ -526,7 +526,7 @@ export default function SlidesPage() {
                     </button>
                     <button 
                       onClick={() => setActiveArchitectureTab('agent')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 ${
                         activeArchitectureTab === 'agent'
                           ? 'bg-sky-50 text-sky-700 border border-sky-200/80 shadow-sm'
                           : 'text-slate-500 hover:text-slate-800'
@@ -536,7 +536,7 @@ export default function SlidesPage() {
                     </button>
                     <button 
                       onClick={() => setActiveArchitectureTab('webhook')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 ${
                         activeArchitectureTab === 'webhook'
                           ? 'bg-amber-50 text-amber-700 border border-amber-200/80 shadow-sm'
                           : 'text-slate-500 hover:text-slate-800'
@@ -550,24 +550,24 @@ export default function SlidesPage() {
                 {/* CONTEÚDO BASEADO NA TAB SELECIONADA */}
                 <div className="my-auto">
                   {activeArchitectureTab === 'conceptual' && (
-                    <div className={`grid grid-cols-5 items-center justify-center ${
-                      isFullscreen ? 'py-12 gap-6' : 'py-2 gap-3'
+                    <div className={`grid grid-cols-1 md:grid-cols-5 items-center justify-center gap-4 md:gap-2 ${
+                      isFullscreen ? 'py-12 gap-6' : 'py-3'
                     }`}>
                       {/* 1. WhatsApp */}
                       <div className={`flex flex-col items-center bg-slate-50 border border-slate-100 shadow-sm rounded-2xl text-center transition-all ${
-                        isFullscreen ? 'p-6' : 'p-4'
+                        isFullscreen ? 'p-6' : 'p-3 sm:p-4'
                       }`}>
                         <div className={`flex items-center justify-center rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 shadow-sm transition-all ${
-                          isFullscreen ? 'h-16 w-16 mb-4' : 'h-12 w-12 mb-3'
+                          isFullscreen ? 'h-16 w-16 mb-4' : 'h-10 w-10 sm:h-12 sm:w-12 mb-2 sm:mb-3'
                         }`}>
-                          <MessageSquare className={`${isFullscreen ? 'h-8 w-8' : 'h-6 w-6'}`} />
+                          <MessageSquare className={`${isFullscreen ? 'h-8 w-8' : 'h-5 w-5 sm:h-6 sm:w-6'}`} />
                         </div>
-                        <span className={`font-extrabold text-slate-700 tracking-wider uppercase ${isFullscreen ? 'text-xs' : 'text-[10px]'}`}>WhatsApp</span>
+                        <span className={`font-extrabold text-slate-700 tracking-wider uppercase ${isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'}`}>WhatsApp</span>
                         <p className={`text-slate-500 mt-1 leading-relaxed ${isFullscreen ? 'text-[10px]' : 'text-[8px]'}`}>Evolution API capta o áudio do Adriano</p>
                       </div>
 
                       {/* Conector */}
-                      <div className="flex flex-col items-center text-slate-300">
+                      <div className="hidden md:flex flex-col items-center text-slate-300">
                         <span className={`font-mono text-slate-500 tracking-wider ${isFullscreen ? 'text-[10px]' : 'text-[8px]'}`}>Webhook</span>
                         <div className={`h-0.5 w-full bg-gradient-to-r from-emerald-500 to-indigo-500 relative ${isFullscreen ? 'mt-3' : 'mt-2'}`}>
                           <div className="absolute top-[-3px] left-0 h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
@@ -576,20 +576,20 @@ export default function SlidesPage() {
 
                       {/* 2. n8n Core */}
                       <div className={`flex flex-col items-center bg-slate-50 border border-slate-100 shadow-sm rounded-2xl text-center relative overflow-hidden transition-all ${
-                        isFullscreen ? 'p-6' : 'p-4'
+                        isFullscreen ? 'p-6' : 'p-3 sm:p-4'
                       }`}>
                         <div className="absolute top-0 left-0 right-0 h-1 bg-indigo-500" />
                         <div className={`flex items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 shadow-sm transition-all ${
-                          isFullscreen ? 'h-16 w-16 mb-4' : 'h-12 w-12 mb-3'
+                          isFullscreen ? 'h-16 w-16 mb-4' : 'h-10 w-10 sm:h-12 sm:w-12 mb-2 sm:mb-3'
                         }`}>
-                          <Layers className={`animate-pulse ${isFullscreen ? 'h-8 w-8' : 'h-6 w-6'}`} />
+                          <Layers className={`animate-pulse ${isFullscreen ? 'h-8 w-8' : 'h-5 w-5 sm:h-6 sm:w-6'}`} />
                         </div>
-                        <span className={`font-extrabold text-slate-700 tracking-wider uppercase ${isFullscreen ? 'text-xs' : 'text-[10px]'}`}>n8n Workflow</span>
+                        <span className={`font-extrabold text-slate-700 tracking-wider uppercase ${isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'}`}>n8n Workflow</span>
                         <p className={`text-slate-500 mt-1 leading-relaxed ${isFullscreen ? 'text-[10px]' : 'text-[8px]'}`}>Gerencia o fluxo e orquestra a IA</p>
                       </div>
 
                       {/* Conector */}
-                      <div className="flex flex-col items-center text-slate-300">
+                      <div className="hidden md:flex flex-col items-center text-slate-300">
                         <span className={`font-mono text-slate-500 tracking-wider ${isFullscreen ? 'text-[10px]' : 'text-[8px]'}`}>Query Tools</span>
                         <div className={`h-0.5 w-full bg-gradient-to-r from-indigo-500 to-sky-500 relative ${isFullscreen ? 'mt-3' : 'mt-2'}`}>
                           <div className="absolute top-[-3px] left-1/2 h-2.5 w-2.5 rounded-full bg-indigo-400 animate-ping" />
@@ -658,12 +658,12 @@ export default function SlidesPage() {
                   )}
                 </div>
 
-                <div className={`bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-6 transition-all ${
-                  isFullscreen ? 'p-6 mt-6' : 'p-4 mt-2'
+                <div className={`bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 transition-all ${
+                  isFullscreen ? 'p-6 mt-6' : 'p-3 sm:p-4 mt-2'
                 }`}>
                   <div className="flex items-center gap-3">
-                    <CheckCircle2 className={`text-emerald-600 flex-shrink-0 ${isFullscreen ? 'h-7 w-7' : 'h-5 w-5'}`} />
-                    <p className={`text-slate-600 leading-relaxed font-medium ${isFullscreen ? 'text-sm' : 'text-xs'}`}>
+                    <CheckCircle2 className={`text-emerald-600 flex-shrink-0 ${isFullscreen ? 'h-6 w-6 md:h-7 md:w-7' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
+                    <p className={`text-slate-600 leading-relaxed font-medium ${isFullscreen ? 'text-xs md:text-sm' : 'text-[9px] sm:text-xs'}`}>
                       {activeArchitectureTab === 'conceptual' && 'O Adriano fala no trânsito -> a IA entende -> a integridade referencial do banco relacional garante o agendamento -> o dashboard atualiza.'}
                       {activeArchitectureTab === 'full' && 'Orquestração horizontal: Webhook tria e higieniza contatos, registra a interação, envia ao Agent com IA que lê/escreve no Supabase e responde via WhatsApp.'}
                       {activeArchitectureTab === 'agent' && 'O AI Agent consome o Gemini e decide autonomamente qual ferramenta SQL (clientes_getAll, tarefas_create, visitas_create, etc.) usar para cumprir o áudio.'}
@@ -678,7 +678,7 @@ export default function SlidesPage() {
                       else if (activeArchitectureTab === 'webhook') setLightboxImage('/n8n_flow_real_inicio.png');
                     }}
                     className={`font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1.5 shrink-0 transition-all ${
-                      isFullscreen ? 'text-sm' : 'text-[10px]'
+                      isFullscreen ? 'text-xs md:text-sm' : 'text-[9px] sm:text-[10px]'
                     }`}
                   >
                     Ver Imagem Ampliada <ArrowUpRight className="h-3.5 w-3.5" />
@@ -771,46 +771,46 @@ export default function SlidesPage() {
             {/* SLIDE 6: REFLEXÃO ACADÊMICA & CONCLUSAO */}
             {currentSlide === 5 && (
               <div className="flex-1 flex flex-col justify-between relative z-10 animate-fade-in">
-                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-2'}`}>
+                <div className={`${isFullscreen ? 'space-y-4' : 'space-y-1.5 sm:space-y-2'}`}>
                   <div className="flex items-center gap-2">
                     <span className={`font-extrabold tracking-widest text-indigo-700 uppercase bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full ${
-                      isFullscreen ? 'text-xs' : 'text-[10px]'
+                      isFullscreen ? 'text-xs' : 'text-[9px] sm:text-[10px]'
                     }`}>
                       REFLEXÃO ACADÊMICA E IMPACTO
                     </span>
                   </div>
                   <h2 className={`font-extrabold tracking-tight text-slate-900 ${
-                    isFullscreen ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
+                    isFullscreen ? 'text-3xl md:text-5xl lg:text-6xl' : 'text-lg sm:text-3xl md:text-4xl'
                   }`}>
                     O Banco de Dados como Rede de Segurança
                   </h2>
                 </div>
 
                 <div className={`bg-slate-50 border border-slate-100 rounded-2xl my-auto relative overflow-hidden transition-all shadow-sm ${
-                  isFullscreen ? 'p-10 space-y-6' : 'p-6 md:p-8 space-y-4'
+                  isFullscreen ? 'p-6 md:p-10 space-y-4 md:space-y-6' : 'p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4'
                 }`}>
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-emerald-500 to-indigo-500" />
                   <p className={`text-slate-700 leading-relaxed font-medium transition-all ${
-                    isFullscreen ? 'text-lg md:text-xl lg:text-2xl' : 'text-sm md:text-base'
+                    isFullscreen ? 'text-base md:text-xl lg:text-2xl' : 'text-xs sm:text-sm md:text-base'
                   }`}>
                     "A nossa maior descoberta acadêmica foi compreender como traduzir dados altamente não estruturados – como os desabafos de coordenadoras de lares de idosos ou anotações apressadas no celular – para a rigidez estruturada de um banco de dados relacional (Supabase/PostgreSQL)."
                   </p>
                   <p className={`text-slate-500 leading-relaxed font-normal italic transition-all ${
-                    isFullscreen ? 'text-sm md:text-lg' : 'text-xs md:text-sm'
+                    isFullscreen ? 'text-xs md:text-lg' : 'text-[10px] sm:text-xs md:text-sm'
                   }`}>
                     "Garantir a integridade referencial em uma tabela de tarefas de auditoria significa, na prática, garantir que um asilo não fique sem a inspeção das tabelas de medicação. A disciplina de Banco de Dados na UNDB deixou de ser apenas comandos SQL, tornando-se uma ferramenta poderosa de transformação e segurança social."
                   </p>
                 </div>
 
-                <div className={`flex items-center justify-between border-t border-slate-100 ${
-                  isFullscreen ? 'pt-8 mt-6' : 'pt-6 mt-2'
+                <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 ${
+                  isFullscreen ? 'pt-8 mt-6' : 'pt-4 sm:pt-6 mt-2'
                 }`}>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <p className={`font-bold text-slate-500 uppercase tracking-widest ${
-                      isFullscreen ? 'text-[11px]' : 'text-[9px]'
+                      isFullscreen ? 'text-[11px]' : 'text-[8px] sm:text-[9px]'
                     }`}>Grupo de Desenvolvimento</p>
-                    <h4 className={`font-extrabold text-slate-800 mt-1 ${
-                      isFullscreen ? 'text-sm' : 'text-xs'
+                    <h4 className={`font-extrabold text-slate-800 mt-0.5 sm:mt-1 ${
+                      isFullscreen ? 'text-sm' : 'text-[10px] sm:text-xs'
                     }`}>Acadêmicos de Engenharia de Software — UNDB</h4>
                   </div>
                   <div className="flex items-center gap-3">
@@ -826,23 +826,23 @@ export default function SlidesPage() {
             )}
 
             {/* BARRA DE NAVEGAÇÃO INTERNA DOS SLIDES */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3.5 bg-white/95 border border-slate-200/80 px-4.5 py-2.5 rounded-2xl shadow-xl shadow-slate-200/60 z-20">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3.5 bg-white/95 border border-slate-200/80 px-3 sm:px-4.5 py-2 rounded-2xl shadow-xl shadow-slate-200/60 z-20 max-w-[95vw] sm:max-w-none">
               <button 
                 onClick={prevSlide}
                 disabled={currentSlide === 0}
                 className="p-1.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100/70 disabled:opacity-30 disabled:hover:bg-transparent transition-all duration-205"
                 title="Slide Anterior"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
               
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto">
                 {SLIDES_CONFIG.map((_, i) => (
                   <button 
                     key={i}
                     onClick={() => setCurrentSlide(i)}
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      currentSlide === i ? 'w-6 bg-emerald-500' : 'w-2 bg-slate-200 hover:bg-slate-300'
+                      currentSlide === i ? 'w-4 sm:w-6 bg-emerald-500' : 'w-1.5 sm:w-2 bg-slate-200 hover:bg-slate-300'
                     }`}
                   />
                 ))}
@@ -854,10 +854,10 @@ export default function SlidesPage() {
                 className="p-1.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100/70 disabled:opacity-30 disabled:hover:bg-transparent transition-all duration-205"
                 title="Próximo Slide"
               >
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
 
-              <span className="h-4 w-px bg-slate-200 mx-1" />
+              <span className="h-4 w-px bg-slate-200 mx-0.5 sm:mx-1" />
 
               {/* Botão de Fullscreen sempre visível (especialmente útil em tela cheia) */}
               <button 
@@ -869,7 +869,7 @@ export default function SlidesPage() {
                 }`}
                 title={isFullscreen ? "Sair de Tela Cheia" : "Tela Cheia"}
               >
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
 
               {/* Botão Sair da Apresentação */}
@@ -878,7 +878,7 @@ export default function SlidesPage() {
                   className="p-1.5 rounded-xl text-rose-500 hover:text-rose-600 hover:bg-rose-50 transition-all duration-205"
                   title="Sair do Slide"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </button>
               </Link>
             </div>

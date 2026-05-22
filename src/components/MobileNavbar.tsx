@@ -58,12 +58,12 @@ export const MobileNavbar: React.FC = () => {
       {/* Header Mobile Fixo */}
       <header className="flex items-center justify-between border-b border-slate-100 bg-white/95 p-4 backdrop-blur-md md:hidden sticky top-0 z-30 shadow-sm w-full">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600">
-            <Activity className="h-4.5 w-4.5 animate-pulse" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg">
+            <img src="/anotado.svg" alt="Logo" />
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-wider text-slate-800 uppercase leading-none">Torre de Comando</h1>
-            <p className="text-[8px] font-semibold text-emerald-600 tracking-wider uppercase">AM Consultorias</p>
+            <h1 className="text-base font-bold tracking-wider text-slate-800 uppercase">AM Consultorias</h1>
+            <p className="text-[10px] font-semibold text-slate-500 tracking-widest uppercase">Anotado</p>
           </div>
         </div>
 

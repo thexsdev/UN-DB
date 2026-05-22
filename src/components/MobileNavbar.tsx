@@ -59,7 +59,7 @@ export const MobileNavbar: React.FC = () => {
       <header className="flex items-center justify-between border-b border-slate-100 bg-white/95 p-4 backdrop-blur-md md:hidden sticky top-0 z-30 shadow-sm w-full">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg">
-            <img src="/anotado.svg" alt="Logo" />
+            <img src="https://raw.githubusercontent.com/thexsdev/UN-DB/f1c89e7c06adcffecfbffb5263b818f609616aa6/public/Anotado.svg" alt="Logo" />
           </div>
           <div>
             <h1 className="text-base font-bold tracking-wider text-slate-800 uppercase">AM Consultorias</h1>

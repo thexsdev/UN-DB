@@ -1,0 +1,1337 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Anotado_Atendimento",
+        "remoteJid": "={{ $('Merge1').first().json.Numero }}",
+        "messageText": "={{ $('AI Agent').item.json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2944,
+        3008
+      ],
+      "id": "9f260bd9-bb5c-4b30-bb65-bce3b31aa3b2",
+      "name": "Enviar Resposta WhatsApp",
+      "credentials": {
+        "evolutionApi": {
+          "id": "0YrwWAaJILxfz4vN",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.conteudo }}",
+        "options": {
+          "systemMessage": "Você é o **Estagiário de Bolso**, o assistente pessoal inteligente do Adriano (consultor da AM Consultorias). O seu objetivo é ajudar o Adriano a gerenciar suas consultorias para instituições da Economia do Cuidado (como ILPIs - Instituições de Longa Permanência para Idosos, CAPS - Centros de Atenção Psicossocial, creches e clínicas).\n\nVocê está conversando com o Adriano através do WhatsApp. O histórico desta interação foi registrado para o cliente correspondente.\nAo interagir, seja profissional, ágil, prestativo e fale sempre em Português do Brasil. Formate suas respostas para WhatsApp (use negritos, listas com marcadores, etc. quando apropriado).\n\nVocê tem **autonomia total e acesso livre** para criar e editar registros no banco de dados, incluindo clientes e contratos. Você NÃO precisa se desculpar ou pedir ao Adriano para alterar valores manualmente, nem dizer que o sistema não permite. Você tem as ferramentas necessárias e deve utilizá-las para fazer as alterações diretamente sempre que solicitado!\n\nVocê tem acesso às seguintes ferramentas do Supabase para ler e gravar dados do Adriano:\n1. `clientes_getAll`: Permite listar todos os clientes cadastrados. Utilize isso se precisar buscar o ID (UUID) de um cliente com base em seu nome ou telefone.\n2. `clientes_create`: Permite cadastrar um novo cliente informando nome, tipo_instituicao, responsavel, telefone_contato e endereco.\n3. `clientes_update`: Permite atualizar dados de um cliente existente (como telefone, endereço, nome, etc.).\n4. `visitas_getAll`: Permite listar visitas cadastradas.\n5. `visitas_create`: Permipte agendar uma nova visita de consultoria para um cliente (especificando data, status 'AGENDADA' e observações).\n6. `visitas_update`: Permite atualizar o status de uma visita ou adicionar observações após a realização dela.\n7. `tarefas_getAll`: Permite consultar tarefas/entregas dos clientes.\n8. `tarefas_create`: Permite criar obrigações para os clientes (como relatórios, planos de trabalho).\n9. `tarefas_update`: Permite atualizar o status de uma tarefa (ex: de 'PENDENTE' para 'CONCLUIDA').\n10. `contratos_getAll`: Permite consultar termos contratuais e valores dos contratos dos clientes.\n11. `contratos_create`: Permite cadastrar um novo contrato para um cliente.\n12. `contratos_update`: Permite atualizar valores, status, cobranças ou prazos de um contrato existente.\n\n### 📂 Estrutura do Banco de Dados e Status Padrões\n\nPara garantir a consistência das operações, respeite rigorosamente a estrutura das tabelas e os status válidos suportados pelo Supabase:\n\n1. **Clientes (`clientes`)**:\n   - **Campos principais**: `id` (UUID), `nome` (String, NOT NULL), `tipo_instituicao` (String), `responsavel` (String), `telefone_contato` (String), `endereco` (String).\n   - **Tipos de Instituições**: Creches, Clínicas, ILPIs (Instituições de Longa Permanência para Idosos), CAPS (Centros de Atenção Psicossocial).\n\n2. **Contratos (`contratos`)**:\n   - **Campos principais**: `id` (UUID), `cliente_id` (UUID, NOT NULL), `tipo_cobranca` (String, NOT NULL), `valor` (Numeric), `data_inicio` (Date, NOT NULL), `data_fim` (Date), `status` (String).\n   - **Tipos de Cobrança**: Mensalidade Fixa, Visita Avulsa, Plano Customizado.\n   - **Status Permitidos**:\n     * `ATIVO` (Padrão para novos contratos ativos)\n     * `INATIVO` (Contrato finalizado/vencido)\n     * `CANCELADO` (Contrato interrompido prematuramente)\n\n3. **Visitas (`visitas`)**:\n   - **Campos principais**: `id` (UUID), `cliente_id` (UUID, NOT NULL), `data_visita` (Timestamp, NOT NULL), `status` (String), `observacoes_campo` (Text).\n   - **Status Permitidos**:\n     * `AGENDADA` (Padrão para visitas agendadas que ainda vão ocorrer)\n     * `REALIZADA` (Quando Adriano concluir a visita e relatar as observações)\n     * `CANCELADA` (Visita suspensa)\n\n4. **Tarefas e Entregas (`tarefas_entregas`)**:\n   - **Campos principais**: `id` (UUID), `cliente_id` (UUID, NOT NULL), `visita_id` (UUID), `titulo` (String, NOT NULL), `descricao` (Text), `data_limite` (Timestamp, NOT NULL), `status` (String).\n   - **Status Permitidos**:\n     * `PENDENTE` (Padrão para novas tarefas a fazer)\n     * `EM_ANDAMENTO` (Tarefa sendo executada)\n     * `CONCLUIDA` (Tarefa devidamente finalizada pelo Adriano)\n     * `ATRASADA` (Tarefa que extrapolou a `data_limite` sem ser concluída)\n\n**Regras Importantes de Operação:**\n- **Autonomia de Acesso Livre:** Se o Adriano pedir para aplicar um desconto em um contrato, renegociar valores ou atualizar dados cadastrais de um cliente, execute a alteração diretamente utilizando as ferramentas `contratos_update` ou `clientes_update`. Depois, confirme para ele que a alteração foi concluída com sucesso!\n- Quando o Adriano disser que realizou uma visita (ou instruir a agendar uma), utilize as ferramentas correspondentes para criar ou atualizar o registro.\n- Se Adriano falar sobre prazos ou tarefas pendentes, liste as tarefas ou registre uma nova no banco de dados.\n- Sempre que você fizer uma leitura ou gravação no banco, confirme a ação para o Adriano com um tom prestativo de estagiário (ex: \"Entendido, chefe! Já apliquei o desconto no contrato da Creche Sorriso de Criança no sistema. O novo valor de R$ 405,00 já está ativo!\").\n- Sempre que precisar do UUID de um cliente ou contrato para criação ou modificação, primeiro faça a listagem usando `clientes_getAll` or `contratos_getAll` e busque pelo registro correspondente. Não invente UUIDs.\n- **Atualização de Registros (Updates):** Para atualizar uma tarefa (`tarefas_update`), visita (`visitas_update`), cliente (`clientes_update`) ou contrato (`contratos_update`), você deve primeiro listar os registros para obter o `id` (UUID) correspondente. Sempre passe o parâmetro `id` com o UUID exato do registro que deseja alterar, junto com as colunas que quer modificar (como `valor`, `status`, `observacoes_campo`, etc.)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2496,
+        3008
+      ],
+      "id": "bf6ed045-0cb1-4552-901d-269fd1c893b3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {
+          "maxOutputTokens": 2048
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2432,
+        3344
+      ],
+      "id": "f19e9654-a00a-46c9-8849-b49a76ec5118",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbgvAbC2iEZ9EjyD",
+          "name": "devfuturama@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "clientes"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        2848,
+        3472
+      ],
+      "id": "9bde296e-043d-4577-8600-92173f7a034c",
+      "name": "clientes_getAll",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "visitas"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        4080,
+        3472
+      ],
+      "id": "8c5dcc3f-10cd-47f0-b5e4-67cf4b62906a",
+      "name": "visitas_getAll",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "visitas",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "data_visita",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "observacoes_campo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3936,
+        3472
+      ],
+      "id": "1518dc8f-e45d-44fb-9881-4dd7ab12db6e",
+      "name": "visitas_create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "visitas",
+        "filterType": "string",
+        "filterString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filters__String_', ``, 'string') }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "data_visita",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "observacoes_campo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3792,
+        3472
+      ],
+      "id": "b7d340d1-15b3-4f9d-9fdb-f12899cb6db7",
+      "name": "visitas_update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "tarefas_entregas"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3648,
+        3472
+      ],
+      "id": "4184fce1-24eb-4e51-9360-59495c502000",
+      "name": "tarefas_getAll",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "tarefas_entregas",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "visita_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "titulo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "descricao",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "data_limite",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3488,
+        3472
+      ],
+      "id": "65180960-50f3-49bd-8afb-f6c17f3d9209",
+      "name": "tarefas_create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "tarefas_entregas",
+        "filterType": "string",
+        "filterString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filters__String_', ``, 'string') }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "titulo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "descricao",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "data_limite",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        4224,
+        3472
+      ],
+      "id": "5f08ef88-f808-433b-874c-9dbde6f23f82",
+      "name": "tarefas_update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "contratos"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3328,
+        3472
+      ],
+      "id": "97f458e9-eb8f-40a6-ad2a-36fa8c128883",
+      "name": "contratos_getAll",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        4512,
+        3472
+      ],
+      "id": "72af66dd-e0fc-44cc-b18f-f53856b5ed84",
+      "name": "contratos_create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "contratos",
+        "filterType": "string",
+        "filterString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filters__String_', ``, 'string') }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "tipo_cobranca",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "valor",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'number') }}"
+            },
+            {
+              "fieldId": "data_inicio",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "data_fim",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        4368,
+        3472
+      ],
+      "id": "1aad5428-1da0-46e0-8c70-a162dd565ba5",
+      "name": "contratos_update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "clientes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nome",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "tipo_instituicao",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "responsavel",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "telefone_contato",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "endereco",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3168,
+        3472
+      ],
+      "id": "2eb5a84f-c386-4c1d-b744-4df01b37307b",
+      "name": "clientes_create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "clientes",
+        "filterType": "string",
+        "filterString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filters__String_', ``, 'string') }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nome",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "tipo_instituicao",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "responsavel",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "telefone_contato",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "endereco",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        3008,
+        3472
+      ],
+      "id": "b19a1621-b9c3-4c9d-8fd8-9476cf1c4076",
+      "name": "clientes_update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').f.json.body.data.key.fromMe }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "c0ff242b-7e32-4811-a816-9c3932d6b739"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Atendente"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "348e2516-92a1-49c5-9e95-f06733c8e82a",
+                    "leftValue": "={{ $('Webhook').first().json.body.data.key.fromMe }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cliente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        544,
+        2912
+      ],
+      "id": "0a3f3095-8aa5-4916-afda-fe86b847b8bc",
+      "name": "Atendente ou Cliente"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Webhook').first().json.body.server_url }}/chat/getBase64FromMediaMessage/{{ $('Webhook').first().json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Webhook').first().json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": {\n    \"key\": {\n      \"id\": \"{{ $('Webhook').first().json.body.data.key.id }}\"\n    }\n  },\n  \"convertToMp4\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1088,
+        2912
+      ],
+      "id": "30a4ef0a-b6a4-4a62-a88c-8a1dca2fe336",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "transcreva este áudio fielmente, palavra por palavra. Não adicione comentários, apenas o texto falado.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1472,
+        2912
+      ],
+      "id": "e3d81903-d7a8-45b9-8fbb-37fae82fa13f",
+      "name": "Analyze audio",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbgvAbC2iEZ9EjyD",
+          "name": "devfuturama@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const base64String = items[0].json.base64;\n\n// Se não tiver base64, retorna vazio para não dar erro\nif (!base64String) {\n  return [];\n}\n\nconst binaryData = Buffer.from(base64String, 'base64');\n\nreturn [\n  {\n    json: {\n      fileName: 'audio.mp3'\n    },\n    binary: {\n      data: {\n        data: binaryData.toString('base64'),\n        mimeType: 'audio/mp4', // O WhatsApp geralmente manda mp4/ogg\n        fileName: 'audio.mp3',\n        fileExtension: 'mp3'\n      }\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        2912
+      ],
+      "id": "3887e537-040c-471d-9060-cd710fba0075",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1466f760-94cb-4e77-b6aa-472539ab155d",
+              "leftValue": "={{ $json.body.data.key.remoteJid }}",
+              "rightValue": "@lid",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -384,
+        2912
+      ],
+      "id": "ba322f72-6145-4abf-ae2a-dacc114ad4dd",
+      "name": "Termina com @lid ?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7bd5c56c-2b54-4cf1-883c-5570e9c8e428",
+              "name": "Numero",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        3008
+      ],
+      "id": "9bfd8787-190c-41c6-b836-11cd949ae18a",
+      "name": "Numero"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8294b968-e155-4af5-8443-70b5afbadc3d",
+              "name": "Numero",
+              "value": "={{ $('EVOLUTION - MESSAGES_UPSERT').item.json.body.data.key.remoteJidAlt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        2832
+      ],
+      "id": "53ce96b9-f806-4239-8fb0-e70cd178d19a",
+      "name": "Numero1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        96,
+        2912
+      ],
+      "id": "ebc7d9fd-0e76-4dc4-bbb1-654ad2d06315",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "clientes"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        256,
+        2912
+      ],
+      "id": "75452eed-a08b-4944-89fc-3a672d9c9911",
+      "name": "Buscar Clientes",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const jid = $input.item.json.Numero || \"\";\nconst cleanJid = jid.replace(/\\D/g, '');\n\nconst getSuffix = (num) => {\n  const clean = num.replace(/\\D/g, '');\n  let withoutCountry = clean;\n  if (clean.startsWith('55') && clean.length > 10) {\n    withoutCountry = clean.substring(2);\n  }\n  return withoutCountry.slice(-8);\n};\n\nconst targetSuffix = getSuffix(cleanJid);\n\n// Acessa os clientes retornados pelo nó anterior\nconst clients = $('Buscar Clientes').all();\nlet matchedClient = null;\n\nfor (const c of clients) {\n  const clientPhone = c.json.telefone_contato || \"\";\n  const clientSuffix = getSuffix(clientPhone);\n  if (clientSuffix && clientSuffix === targetSuffix) {\n    matchedClient = c.json;\n    break;\n  }\n}\n\nreturn {\n  json: {\n    ...$input.item.json,\n    cliente_encontrado: matchedClient ? true : false,\n    cliente_id: matchedClient ? matchedClient.id : null,\n    cliente_nome: matchedClient ? matchedClient.nome : \"Desconhecido\",\n    cliente_dados: matchedClient\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        2912
+      ],
+      "id": "522a64db-6e40-4480-9b65-738c37e57bb3",
+      "name": "Filtrar Cliente por Telefone"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "condicao-audio",
+              "leftValue": "={{ $('Webhook').first().json.body.data.messageType }}",
+              "rightValue": "audioMessage",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        3040
+      ],
+      "id": "24319b30-a4cc-460e-af9f-b3f7bb9ab640",
+      "name": "É Áudio?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-texto-entrada",
+              "name": "texto_mensagem",
+              "value": "=\n{{ $('Webhook').first().json.body.data.message.conversation || $json.body.data.message.extendedTextMessage?.text || \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        3168
+      ],
+      "id": "ce8e6103-9895-48f5-9f37-1365b008db6b",
+      "name": "Definir Texto de Entrada"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-texto-audio",
+              "name": "texto_mensagem",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1664,
+        2912
+      ],
+      "id": "6af6fd73-4fed-4039-bc97-6748cf08d911",
+      "name": "Definir Texto do Áudio"
+    },
+    {
+      "parameters": {
+        "tableId": "log_interacoes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conteudo",
+              "fieldValue": "={{ $json.texto_mensagem }}"
+            },
+            {
+              "fieldId": "remetente",
+              "fieldValue": "={{ $('Webhook').first().json.body.data.key.remoteJidAlt }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2304,
+        3008
+      ],
+      "id": "3c1964d7-a84d-4f82-bb1c-9ebde07ab37b",
+      "name": "Registrar Interação Entrada",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "log_interacoes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ $json.cliente_id }}"
+            },
+            {
+              "fieldId": "remetente",
+              "fieldValue": "Atendente"
+            },
+            {
+              "fieldId": "conteudo",
+              "fieldValue": "={{ $json.body.data.message.conversation || $json.body.data.message.extendedTextMessage?.text || $json.body.data.message.imageMessage?.caption || \"\" }}"
+            },
+            {
+              "fieldId": "metadados"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        832,
+        2784
+      ],
+      "id": "61748f82-fe77-4f2c-9c1b-3a8c0a0551d3",
+      "name": "Registrar Interação Saída",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "log_interacoes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ $('Filtrar Cliente por Telefone').first().json.cliente_id }}"
+            },
+            {
+              "fieldId": "remetente",
+              "fieldValue": "Estagiário de Bolso"
+            },
+            {
+              "fieldId": "conteudo",
+              "fieldValue": "={{ $json.output }}"
+            },
+            {
+              "fieldId": "metadados"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2768,
+        3008
+      ],
+      "id": "03050fe4-b1b9-4c6a-b923-92d18ae9a218",
+      "name": "Registrar Resposta IA",
+      "credentials": {
+        "supabaseApi": {
+          "id": "l9Ba9FK4Lam0Otil",
+          "name": "UNDB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "111b3322-9a19-477e-9671-57dbc44e6758",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -608,
+        2912
+      ],
+      "id": "3324a91b-7ab7-4277-bccf-a80d61d8b37f",
+      "name": "Webhook",
+      "webhookId": "111b3322-9a19-477e-9671-57dbc44e6758"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Merge1').first().json.Numero }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2656,
+        3344
+      ],
+      "id": "33981809-9b3c-4535-96c5-94fdbf128fef",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2032,
+        3008
+      ],
+      "id": "0dfae101-3c92-4f59-8fe0-8d03ae8c1dc4",
+      "name": "Merge"
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Registrar Resposta IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clientes_getAll": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "visitas_getAll": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "visitas_create": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "visitas_update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tarefas_getAll": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tarefas_create": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tarefas_update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contratos_getAll": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contratos_create": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contratos_update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clientes_create": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clientes_update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atendente ou Cliente": {
+      "main": [
+        [
+          {
+            "node": "Registrar Interação Saída",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "É Áudio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze audio": {
+      "main": [
+        [
+          {
+            "node": "Definir Texto do Áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Analyze audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Termina com @lid ?": {
+      "main": [
+        [
+          {
+            "node": "Numero1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Numero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Numero": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Numero1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Buscar Clientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Clientes": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Cliente por Telefone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Cliente por Telefone": {
+      "main": [
+        [
+          {
+            "node": "Atendente ou Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É Áudio?": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Definir Texto de Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Definir Texto de Entrada": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Definir Texto do Áudio": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Interação Entrada": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Resposta IA": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resposta WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Termina com @lid ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Registrar Interação Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "58d93ca2ea0325d17ba233a8ea0064e4ab3ef3dd7df9b7949836b9ef42b2e0b9"
+  }
+}
